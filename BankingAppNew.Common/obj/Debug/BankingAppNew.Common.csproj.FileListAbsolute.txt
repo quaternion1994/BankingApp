@@ -1,0 +1,4 @@
+C:\Users\quate_000\documents\visual studio 2013\Projects\BankingAppNew\BankingAppNew.Common\bin\Debug\BankingAppNew.Common.dll
+C:\Users\quate_000\documents\visual studio 2013\Projects\BankingAppNew\BankingAppNew.Common\bin\Debug\BankingAppNew.Common.pdb
+C:\Users\quate_000\documents\visual studio 2013\Projects\BankingAppNew\BankingAppNew.Common\obj\Debug\BankingAppNew.Common.dll
+C:\Users\quate_000\documents\visual studio 2013\Projects\BankingAppNew\BankingAppNew.Common\obj\Debug\BankingAppNew.Common.pdb
