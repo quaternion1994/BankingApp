@@ -99,7 +99,7 @@ namespace BankingApp.Web.Controllers
                 return BadRequest(result.Message);
             else
                 return Ok(result.Value);
-        }
+        } 
 
         [Route("withdraw")]
         [HttpPost]
