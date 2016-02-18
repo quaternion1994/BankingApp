@@ -21,31 +21,31 @@ namespace BankingApp.Web.Controllers
     [Authorize]
     public class BankAccountController : ApiController
     {
-        IBankService service;
+        IBankService _service;
         public BankUserManager UserManager { get; private set; }
         //User.Identity.GetUserId()
 
         public BankAccountController(IBankService service)
         {
-            this.service = service;
-            UserManager = Startup.UserManagerFactory();
+            this._service = service;
+            this.UserManager = Startup.UserManagerFactory();
         }
         // GET api/BankAccount/AccountList
         // Получить список
         [Route("AccountList")]
         public IHttpActionResult GetAccountList()
         {
-            var result = service.AccountList();
+            var result = _service.AccountList();
             if (result.Status != BankRequestStatus.Done)
                 return BadRequest(result.Message);
-            return Ok(service.AccountList().Value.AsEnumerable());
+            return Ok(_service.AccountList().Value.AsEnumerable());
         }
 
-        [Route("Balance/{id}")]
-        public IHttpActionResult GetBalance(long id)
+        [Route("balance")]
+        public IHttpActionResult GetBalance()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
-            var result = service.GetBalance(user.Id);
+            var result = _service.GetBalance(user.Id);
 
             if (result.Status != BankRequestStatus.Done)
                 return BadRequest(result.Message);
@@ -59,7 +59,7 @@ namespace BankingApp.Web.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var result = service.CreateAccount(new BankAccount()
+            var result = _service.CreateAccount(new BankAccount()
             {
                 AccountBalance = model.Balance,
                 UserName = model.UserName,
@@ -80,7 +80,7 @@ namespace BankingApp.Web.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var result = service.Deposit(user.Id, amount);
+            var result = _service.Deposit(user.Id, amount);
 
             if (result.Status != BankRequestStatus.Done)
                 return BadRequest(result.Message);
@@ -93,7 +93,7 @@ namespace BankingApp.Web.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var result = service.GetUserStatement(user.Id);
+            var result = _service.GetUserStatement(user.Id);
 
             if (result.Status != BankRequestStatus.Done)
                 return BadRequest(result.Message);
@@ -107,7 +107,7 @@ namespace BankingApp.Web.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var result = service.Withdraw(user.Id, amount);
+            var result = _service.Withdraw(user.Id, amount);
 
             if (result.Status!=BankRequestStatus.Done)
                 return BadRequest(result.Message);
@@ -122,7 +122,7 @@ namespace BankingApp.Web.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var result = service.Transfer(user.Id, model.DestanationId, model.Amount);
+            var result = _service.Transfer(user.Id, model.DestanationId, model.Amount);
 
             if (result.Status != BankRequestStatus.Done)
                 return BadRequest(result.Message);

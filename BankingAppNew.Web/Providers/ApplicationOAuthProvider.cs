@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BankingAppNew.DataAccess;
 using BankingAppNew.DataAccess.Entities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
@@ -14,91 +16,47 @@ namespace BankingAppNew.Web.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
-        private readonly string _publicClientId;
-        private readonly Func<UserManager<BankAccount>> _userManagerFactory;
 
-        public ApplicationOAuthProvider(string publicClientId, Func<UserManager<BankAccount>> userManagerFactory)
+        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-            if (publicClientId == null)
-            {
-                throw new ArgumentNullException("publicClientId");
-            }
-
-            if (userManagerFactory == null)
-            {
-                throw new ArgumentNullException("userManagerFactory");
-            }
-
-            _publicClientId = publicClientId;
-            _userManagerFactory = userManagerFactory;
+            context.Validated();
+            return Task.FromResult<object>(null);
         }
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            using (UserManager<BankAccount> userManager = _userManagerFactory())
+
+            var allowedOrigin = "*";
+
+            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] {allowedOrigin});
+
+            var userManager = context.OwinContext.GetUserManager<BankUserManager>();
+
+            BankAccount user = await userManager.FindAsync(context.UserName, context.Password);
+
+            if (user == null)
             {
-                BankAccount user = await userManager.FindAsync(context.UserName, context.Password);
-
-                if (user == null)
-                {
-                    context.SetError("invalid_grant", "Имя пользователя или пароль указаны неверно.");
-                    return;
-                }
-
-                ClaimsIdentity oAuthIdentity = await userManager.CreateIdentityAsync(user,
-                    context.Options.AuthenticationType);
-                ClaimsIdentity cookiesIdentity = await userManager.CreateIdentityAsync(user,
-                    CookieAuthenticationDefaults.AuthenticationType);
-                AuthenticationProperties properties = CreateProperties(user.UserName);
-                AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
-                context.Validated(ticket);
-                context.Request.Context.Authentication.SignIn(cookiesIdentity);
-            }
-        }
-
-        public override Task TokenEndpoint(OAuthTokenEndpointContext context)
-        {
-            foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
-            {
-                context.AdditionalResponseParameters.Add(property.Key, property.Value);
+                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
             }
 
-            return Task.FromResult<object>(null);
-        }
-
-        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
-        {
-            // Учетные данные владельца ресурса не содержат идентификатор клиента.
-            if (context.ClientId == null)
+            if (!user.EmailConfirmed)
             {
-                context.Validated();
+                context.SetError("invalid_grant", "User did not confirm email.");
+                return;
             }
 
-            return Task.FromResult<object>(null);
+            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager);
+
+            var ticket = new AuthenticationTicket(oAuthIdentity, null);
+
+            context.Validated(ticket);
+
         }
 
-        public override Task ValidateClientRedirectUri(OAuthValidateClientRedirectUriContext context)
+        internal static AuthenticationProperties CreateProperties(string p)
         {
-            if (context.ClientId == _publicClientId)
-            {
-                Uri expectedRootUri = new Uri(context.Request.Uri, "/");
-
-                if (expectedRootUri.AbsoluteUri == context.RedirectUri)
-                {
-                    context.Validated();
-                }
-            }
-
-            return Task.FromResult<object>(null);
-        }
-
-        public static AuthenticationProperties CreateProperties(string userName)
-        {
-            IDictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "userName", userName }
-            };
-            return new AuthenticationProperties(data);
+            throw new NotImplementedException();
         }
     }
 }
