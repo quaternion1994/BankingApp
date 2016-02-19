@@ -15,7 +15,7 @@ namespace BankingAppNew.DataAccess
 
         public static BankUserManager Create(IdentityFactoryOptions<BankUserManager> options, IOwinContext context)
         {
-            return new BankUserManager(new UserStore<BankAccount>((DbContext)OwinContextExtensions.Get<BankDbContext>(context)));
+            return new BankUserManager(new UserStore<BankAccount>(OwinContextExtensions.Get<BankDbContext>(context)));
         }
   }
 }

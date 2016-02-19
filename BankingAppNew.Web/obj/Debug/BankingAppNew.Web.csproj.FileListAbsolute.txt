@@ -100,3 +100,13 @@ C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAp
 C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\ru\System.Web.Http.Owin.resources.dll
 C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\obj\Debug\BankingAppNew.Web.dll
 C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\obj\Debug\BankingAppNew.Web.pdb
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\Auth0.Owin.dll
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\Microsoft.Owin.Security.Jwt.dll
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\Microsoft.Owin.Security.Jwt.xml
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\System.IdentityModel.Tokens.Jwt.pdb
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\System.IdentityModel.Tokens.Jwt.xml
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\Dragon.Security.Hmac.Core.dll
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\Thinktecture.IdentityModel.dll
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\Thinktecture.IdentityModel.pdb
+C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingAppNew\BankingAppNew.Web\bin\Thinktecture.IdentityModel.xml

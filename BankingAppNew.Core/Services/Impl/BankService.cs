@@ -8,6 +8,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using BankingAppNew.DataAccess.UnitsOfWork.Impl;
 
 namespace BankingAppNew.Core.Services.Impl
 {
@@ -187,11 +188,12 @@ namespace BankingAppNew.Core.Services.Impl
         }
     }
     
-    public BankRequestResult<IQueryable<BankAccount>> AccountList()
+    public BankRequestResult<IEnumerable<BankAccount>> AccountList()
     {
         using (AccountUnitOfWork accountUnitOfWork = this._factory.CreateAccountUnitOfWork())
         {
-            return new BankRequestResult<IQueryable<BankAccount>>(BankRequestStatus.Done, accountUnitOfWork.BankAccountRepository.All());
+            return new BankRequestResult<IEnumerable<BankAccount>>(BankRequestStatus.Done, 
+                accountUnitOfWork.BankAccountRepository.All().ToList());
         }
     }
   }

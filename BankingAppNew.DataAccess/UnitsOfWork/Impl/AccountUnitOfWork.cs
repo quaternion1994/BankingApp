@@ -1,8 +1,7 @@
-﻿using BankingAppNew.DataAccess;
+﻿using System;
 using BankingAppNew.DataAccess.Repositories;
-using System;
 
-namespace BankingAppNew.DataAccess.Repositories.Implementation
+namespace BankingAppNew.DataAccess.UnitsOfWork.Impl
 {
   public class AccountUnitOfWork : IDisposable
   {
@@ -10,7 +9,7 @@ namespace BankingAppNew.DataAccess.Repositories.Implementation
     private BankDbContext _context;
     private IBankAccountRepository _bankAccountRepository;
     private ITransferRepository _transferRepository;
-
+    
     public IBankAccountRepository BankAccountRepository
     {
       get

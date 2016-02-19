@@ -13,30 +13,39 @@ namespace BankingAppNew.DataAccess
         public BankDbContext()
           : base("name=DefaultConnection")
         {
-          Database.SetInitializer<BankDbContext>((IDatabaseInitializer<BankDbContext>) new BankDbContextInitializer());
+          Database.SetInitializer<BankDbContext>( new BankDbContextInitializer() );
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-          base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
         public static BankDbContext Create()
         {
-          return new BankDbContext();
+            return new BankDbContext();
         }
   }
 }
 public class BankDbContextInitializer : DropCreateDatabaseAlways<BankDbContext>
 {
-    protected override async void Seed(BankDbContext context)
+    protected override void Seed(BankDbContext context)
     {
         BankAccount vlad = new BankAccount()
         {
             Email = "vladislav.petrenko1@gmail.com",
-            UserName = "Vlad Petrenko"
+            EmailConfirmed = true,
+            AccountBalance = 0,
+            UserName = "Vlad"
         };
+
         BankUserManager manager = new BankUserManager(new UserStore<BankAccount>(context));
-        IdentityResult result1 = await manager.CreateAsync(vlad, "123456");
+        IdentityResult result1 = manager.Create(vlad, "123456");
+
+        base.Seed(context);
+        if (result1 != null)
+        {
+            
+        }
     }
 }

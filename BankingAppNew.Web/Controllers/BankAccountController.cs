@@ -23,7 +23,6 @@ namespace BankingApp.Web.Controllers
     {
         IBankService _service;
         public BankUserManager UserManager { get; private set; }
-        //User.Identity.GetUserId()
 
         public BankAccountController(IBankService service)
         {
@@ -33,15 +32,24 @@ namespace BankingApp.Web.Controllers
         // GET api/BankAccount/AccountList
         // Получить список
         [Route("AccountList")]
+        [AllowAnonymous]
         public IHttpActionResult GetAccountList()
         {
             var result = _service.AccountList();
+
             if (result.Status != BankRequestStatus.Done)
                 return BadRequest(result.Message);
-            return Ok(_service.AccountList().Value.AsEnumerable());
+
+            return Ok<IEnumerable<AccountListViewModel>>(_service.AccountList().
+                                    Value.Select(item => new AccountListViewModel()
+                                    {
+                                        Id = item.Id,
+                                        UserName = item.UserName,
+                                        AccountBalance = item.AccountBalance
+                                    }));
         }
 
-        [Route("balance")]
+        [Route("Balance")]
         public IHttpActionResult GetBalance()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -55,6 +63,7 @@ namespace BankingApp.Web.Controllers
         // POST api/BankAccount/CreateBankAccount
         // Create bank account
         [Route("CreateBankAccount"),HttpPost]
+        [AllowAnonymous]
         public IHttpActionResult CreateBankAccount([FromBody] CreateAccountViewModel model)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -74,7 +83,7 @@ namespace BankingApp.Web.Controllers
 
         // PUT api/BankAccount/Deposit
         //
-        [Route("deposit")]
+        [Route("Deposit")]
         [HttpPost]
         public IHttpActionResult Deposit([FromBody]decimal amount)
         {
@@ -88,7 +97,7 @@ namespace BankingApp.Web.Controllers
                 return Ok(result.Message);
         }
 
-        [Route("userstatements")]
+        [Route("Userstatements")]
         public IHttpActionResult GetUserStatements()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -101,7 +110,7 @@ namespace BankingApp.Web.Controllers
                 return Ok(result.Value);
         } 
 
-        [Route("withdraw")]
+        [Route("Withdraw")]
         [HttpPost]
         public IHttpActionResult GetWithdraw([FromBody] decimal amount)
         {
@@ -115,7 +124,7 @@ namespace BankingApp.Web.Controllers
                 return Ok(result.Message);
         }
 
-        [Route("transfer")]
+        [Route("Transfer")]
         [HttpPost]
 
         public IHttpActionResult Transfer([FromBody]TransferViewModel model)

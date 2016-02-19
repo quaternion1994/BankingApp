@@ -37,12 +37,12 @@ namespace BankingAppNew.DataAccess.Repositories.Implementation
 
     public virtual IQueryable<T> All(Expression<Func<T, bool>> query)
     {
-      return Queryable.Where<T>((IQueryable<T>) this._context.Set<T>(), query);
+      return _context.Set<T>().Where( query);
     }
 
     public virtual void Add(T entity)
     {
-      this._context.Set<T>().Add(entity);
+        this._context.Set<T>().Add(entity);
     }
 
     public virtual void Delete(T entity)

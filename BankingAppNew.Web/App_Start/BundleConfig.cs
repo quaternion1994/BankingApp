@@ -14,11 +14,19 @@ namespace BankingAppNew.Web
     {
       bundles.Add(new ScriptBundle("~/bundles/modernizr").
           Include("~/Scripts/modernizr-*", new IItemTransform[0]));
+      bundles.Add(new ScriptBundle("~/bundles/angularjs").
+          Include("~/Scripts/angular.min.js", 
+                "~/Scripts/angular-route.min",
+                "~/Scripts/JsApp/BankingApp.js"));
+
       bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js"
                 ));
 
+      bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+                "~/Scripts/jquery.min.js"
+                ));
       bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
                 "~/Content/site.css"

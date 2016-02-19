@@ -28,6 +28,6 @@ namespace BankingAppNew.Core.Services
 
     BankRequestResult Withdraw(string userid, decimal amount);
 
-    BankRequestResult<IQueryable<BankAccount>> AccountList();
+    BankRequestResult<IEnumerable<BankAccount>> AccountList();
   }
 }

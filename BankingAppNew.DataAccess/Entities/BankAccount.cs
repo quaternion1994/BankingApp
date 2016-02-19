@@ -17,19 +17,15 @@ namespace BankingAppNew.DataAccess.Entities
 {
     public class BankAccount : IdentityUser
     {
-        public long BankAccountId { get; set; }
-
-        [Required(AllowEmptyStrings = false)]
-
         [Timestamp]
         public byte[] RowVersion { get; set; }
 
         public Decimal AccountBalance { get; set; }
 
         public virtual IEnumerable<Transfer> Transfers { get; set; }
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<BankAccount> manager)
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(BankUserManager manager)
         {
-            ClaimsIdentity userIdentity = await manager.CreateIdentityAsync(this, "ApplicationCookie");
+            ClaimsIdentity userIdentity = await manager.CreateIdentityAsync(this, "JWT");
             return userIdentity;
         }
 

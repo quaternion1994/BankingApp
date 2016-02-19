@@ -5,6 +5,7 @@
 // Assembly location: C:\Users\quate_000\Documents\Visual Studio 2013\Projects\BankingApp\BankingApp.DataAccess\bin\Debug\BankingApp.DataAccess.dll
 
 using BankingAppNew.DataAccess.Repositories.Implementation;
+using BankingAppNew.DataAccess.UnitsOfWork.Impl;
 
 namespace BankingAppNew.DataAccess.Repositories
 {
