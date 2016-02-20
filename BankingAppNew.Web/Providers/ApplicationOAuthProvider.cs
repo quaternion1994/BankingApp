@@ -16,47 +16,44 @@ namespace BankingAppNew.Web.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
-
-        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+        public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            context.Validated();
-            return Task.FromResult<object>(null);
+            var identity = new ClaimsIdentity("otc");
+            var username = context.OwinContext.Get<string>("otc:username");
+            identity.AddClaim(new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", username));
+            identity.AddClaim(new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "user"));
+            context.Validated(identity);
+            return Task.FromResult(0);
         }
 
-        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-
-            var allowedOrigin = "*";
-
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] {allowedOrigin});
-
-            var userManager = context.OwinContext.GetUserManager<BankUserManager>();
-
-            BankAccount user = await userManager.FindAsync(context.UserName, context.Password);
-
-            if (user == null)
+            try
             {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
-                return;
-            }
+                var username = context.Parameters["username"];
+                var password = context.Parameters["password"];
+                
+                BankUserManager userManager =
+                    context.OwinContext.GetUserManager<BankUserManager>();
 
-            if (!user.EmailConfirmed)
+                var user = await userManager.FindAsync(username, password);
+
+                if (user!=null)
+                {
+                    context.OwinContext.Set("otc:username", username);
+                    context.Validated();
+                }
+                else
+                {
+                    context.SetError("Invalid credentials");
+                    context.Rejected();
+                }
+            }
+            catch
             {
-                context.SetError("invalid_grant", "User did not confirm email.");
-                return;
+                context.SetError("Server error");
+                context.Rejected();
             }
-
-            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager);
-
-            var ticket = new AuthenticationTicket(oAuthIdentity, null);
-
-            context.Validated(ticket);
-
-        }
-
-        internal static AuthenticationProperties CreateProperties(string p)
-        {
-            throw new NotImplementedException();
         }
     }
 }

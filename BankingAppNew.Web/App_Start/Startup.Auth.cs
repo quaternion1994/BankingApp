@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Claims;
-using System.IdentityModel.Tokens;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security.Jwt;
-using System.Web.Http;
-using Microsoft.Owin.Security.DataHandler.Encoder;
-using Microsoft.Owin.Security;
-using WebConfigurationManager = System.Web.Configuration.WebConfigurationManager;
-using BankingAppNew.Web.Providers;
+using System.Web.Configuration;
 using BankingAppNew.DataAccess;
 using BankingAppNew.DataAccess.Entities;
+using BankingAppNew.Web.Providers;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
-using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.DataHandler.Encoder;
+using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
-using Newtonsoft.Json.Linq;
 using Owin;
+using AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode;
 
 namespace BankingAppNew.Web
 {
@@ -40,41 +30,41 @@ namespace BankingAppNew.Web
 
         public void ConfigureAuth(IAppBuilder app)
         {
-            var issuer = WebConfigurationManager.AppSettings["auth0:Domain"];
-            var audience = WebConfigurationManager.AppSettings["auth0:ClientId"];
-            var secret = TextEncodings.Base64Url.Decode(WebConfigurationManager.AppSettings["auth0:ClientSecret"]);
+            var issuer = WebConfigurationManager.AppSettings["Domain"];
+            var audience = WebConfigurationManager.AppSettings["ClientId"];
+            var secret = TextEncodings.Base64Url.Decode(WebConfigurationManager.AppSettings["ClientSecret"]);
 
             // Api controllers with an [Authorize] attribute will be validated with JWT
             app.UseJwtBearerAuthentication(
                 new JwtBearerAuthenticationOptions
                 {
-                    AuthenticationMode = AuthenticationMode.Active,
-                    AllowedAudiences = new[] { audience },
-                    IssuerSecurityTokenProviders = new IIssuerSecurityTokenProvider[]
+                    AllowedAudiences = new[] {audience},
+                    IssuerSecurityTokenProviders = new[]
                     {
-                        new SymmetricKeyIssuerSecurityTokenProvider(issuer, secret)
-                    },
+                        new SymmetricKeyIssuerSecurityTokenProvider(issuer,secret)
+                    }
                 });
             ConfigureOAuthTokenGeneration(app);
         }
+
         private void ConfigureOAuthTokenGeneration(IAppBuilder app)
         {
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(BankDbContext.Create);
             app.CreatePerOwinContext<BankUserManager>(BankUserManager.Create);
-            
-            OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
-            {
-                //For Dev enviroment only (on production should be AllowInsecureHttp = false)
-                AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/oauth/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-                Provider = new ApplicationOAuthProvider(),
-                AccessTokenFormat = new CustomJwtFormat() 
-            };
 
+            var oAuthServerOptions = new OAuthAuthorizationServerOptions()
+            {
+                    TokenEndpointPath = new PathString("/token"),
+                    AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+                    AccessTokenFormat = new MyJwtFormat(),
+                    Provider = new ApplicationOAuthProvider(),
+                    #if DEBUG
+                        AllowInsecureHttp = true
+                    #endif
+            };
             // OAuth 2.0 Bearer Access Token Generation
-            app.UseOAuthAuthorizationServer(OAuthServerOptions);
+            app.UseOAuthAuthorizationServer(oAuthServerOptions);
         }
     }
 }

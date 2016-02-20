@@ -244,7 +244,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
-    <Compile Include="Providers\CustomJwtFormat.cs" />
+    <Compile Include="Providers\MyJwtFormat.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
