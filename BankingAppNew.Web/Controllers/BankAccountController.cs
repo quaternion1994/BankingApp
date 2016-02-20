@@ -103,11 +103,16 @@ namespace BankingApp.Web.Controllers
             var user = UserManager.FindById(User.Identity.GetUserId());
 
             var result = _service.GetUserStatement(user.Id);
-
+            
             if (result.Status != BankRequestStatus.Done)
                 return BadRequest(result.Message);
             else
-                return Ok(result.Value);
+                return Ok(from item in result.Value select new TransactionViewModel()
+                {
+                    Username = item.Username,
+                    Amount = item.Amount,
+                    TransferId = item.TransferId
+                });
         } 
 
         [Route("Withdraw")]

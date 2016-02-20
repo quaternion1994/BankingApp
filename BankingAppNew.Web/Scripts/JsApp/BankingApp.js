@@ -1,7 +1,17 @@
-﻿var app = angular.module("BankingApp", []);
+﻿var app = angular.module("BankingApp", ["ngRoute"]);
 
-app.controller("BankingAppCtrl", function ($scope, $http) {
-        $http.get('api/BankAccount/AccountList').success(function(data) {
-            $scope.accountlist = data;
+app.config(['$routeProvider',
+  function ($routeProvider) {
+      $routeProvider.
+        when('/bank', {
+            templateUrl: 'Home/Index',
+            controller: 'BankingAppCtrl'
+        }).
+        when('/login', {
+            templateUrl: 'Home/Login',
+            controller: 'LoginCtrl'
+        }).
+        otherwise({
+            redirectTo: '/login'
         });
-});
+}]);

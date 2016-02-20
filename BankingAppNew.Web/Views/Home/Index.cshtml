@@ -1,7 +1,23 @@
 ﻿<div ng-app="BankingApp">
     <div ng-controller="BankingAppCtrl">
-        <ul>
-            <li ng-repeat="item in accountlist">{{item.UserName}} [{{item.Id}}]</li>
-        </ul>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>@User.Identity.Name</h3>
+                <span>Баланс: </span><span style="font-weight: bold">{{balance}}$</span>
+                <ul>
+                    <li ng-repeat="item in accountlist">{{item.UserName}} [{{item.Id}}]</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Список транзакций</h3>
+                <ul>
+                    <li ng-repeat="item in transactions">{{item.TransferId}} [{{item.amount}}]</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Операции</h3>
+
+            </div>
+        </div>
     </div>
 </div>

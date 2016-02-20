@@ -27,6 +27,8 @@ namespace BankingAppNew.DataAccess
         }
   }
 }
+
+
 public class BankDbContextInitializer : DropCreateDatabaseAlways<BankDbContext>
 {
     protected override void Seed(BankDbContext context)
