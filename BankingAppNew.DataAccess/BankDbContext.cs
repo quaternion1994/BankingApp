@@ -29,7 +29,7 @@ namespace BankingAppNew.DataAccess
 }
 
 
-public class BankDbContextInitializer : DropCreateDatabaseAlways<BankDbContext>
+public class BankDbContextInitializer : DropCreateDatabaseIfModelChanges<BankDbContext>
 {
     protected override void Seed(BankDbContext context)
     {
@@ -45,9 +45,5 @@ public class BankDbContextInitializer : DropCreateDatabaseAlways<BankDbContext>
         IdentityResult result1 = manager.Create(vlad, "123456");
 
         base.Seed(context);
-        if (result1 != null)
-        {
-            
-        }
     }
 }

@@ -19,5 +19,10 @@ namespace BankingAppNew.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Registration()
+        {
+            return View();
+        }
     }
 }

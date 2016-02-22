@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Registration";
+}
+
+<h2>Registration</h2>
+<input ng-model="username" type="text" placeholder="Username" /><hr>
+<input ng-model="password" type="password" placeholder="Enter pass"/><hr>
+<input ng-model="confpassword" type="password" placeholder="Enter pass"/><hr>
+<ul>
+    <li style="color: red" ng-repeat="item in validmessages">{{item}}</li>
+</ul>
+<hr>
+<input id="regbutton" ng-click="reg()" type="button" value="Sing up" />
+<hr>
+
+<span style="color: green;">{{message}}</span>
+

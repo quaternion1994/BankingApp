@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using BankingAppNew.DataAccess;
 using BankingAppNew.DataAccess.Entities;
 using Microsoft.AspNet.Identity;
@@ -16,16 +17,21 @@ namespace BankingAppNew.Web.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
-        public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            
+            var userManager = context.OwinContext.GetUserManager<BankUserManager>();
+            BankAccount user = userManager.Find(context.UserName, context.Password);
+
             var identity = new ClaimsIdentity("otc");
             var username = context.OwinContext.Get<string>("otc:username");
-            identity.AddClaim(new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", username));
-            identity.AddClaim(new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "user"));
-            context.Validated(identity);
-            return Task.FromResult(0);
-        }
 
+            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager);
+
+            var ticket = new AuthenticationTicket(oAuthIdentity, null);
+
+            context.Validated(ticket);
+        }
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             try
@@ -33,8 +39,7 @@ namespace BankingAppNew.Web.Providers
                 var username = context.Parameters["username"];
                 var password = context.Parameters["password"];
                 
-                BankUserManager userManager =
-                    context.OwinContext.GetUserManager<BankUserManager>();
+                BankUserManager userManager = context.OwinContext.GetUserManager<BankUserManager>();
 
                 var user = await userManager.FindAsync(username, password);
 

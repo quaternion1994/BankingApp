@@ -49,10 +49,27 @@ namespace BankingApp.Web.Controllers
                                     }));
         }
 
+        [Route("UserInfo")]
+        public IHttpActionResult GetUserInfo()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+                return BadRequest();
+
+            return Ok(new AccountInfoViewModel()
+            {
+                Username = user.UserName,
+                Id = user.Id
+            });
+        }
+
         [Route("Balance")]
         public IHttpActionResult GetBalance()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+                return BadRequest();
+
             var result = _service.GetBalance(user.Id);
 
             if (result.Status != BankRequestStatus.Done)
@@ -64,21 +81,27 @@ namespace BankingApp.Web.Controllers
         // Create bank account
         [Route("CreateBankAccount"),HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult CreateBankAccount([FromBody] CreateAccountViewModel model)
+        public IHttpActionResult CreateBankAccount([FromBody] RegisterViewModel model)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var result = _service.CreateAccount(new BankAccount()
+            if (ModelState.IsValid)
             {
-                AccountBalance = model.Balance,
-                UserName = model.UserName,
-                Email = model.Email
-            });
+                var newaccount = new BankAccount()
+                {
+                    AccountBalance = 0,
+                    UserName = model.UserName
+                };
+                IdentityResult result = UserManager.Create(newaccount, model.Password);
 
-            if (result.Status != BankRequestStatus.Done)
-                return BadRequest(result.Message);
+                if (result.Succeeded)
+                    return Ok();
+                else
+                    return BadRequest();
+            }
             else
-                return Ok(result.Message);
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         // PUT api/BankAccount/Deposit
@@ -88,6 +111,8 @@ namespace BankingApp.Web.Controllers
         public IHttpActionResult Deposit([FromBody]decimal amount)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+                return BadRequest();
 
             var result = _service.Deposit(user.Id, amount);
 
@@ -101,6 +126,8 @@ namespace BankingApp.Web.Controllers
         public IHttpActionResult GetUserStatements()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
+            if(user==null)
+                return BadRequest();
 
             var result = _service.GetUserStatement(user.Id);
             
@@ -113,13 +140,15 @@ namespace BankingApp.Web.Controllers
                     Amount = item.Amount,
                     TransferId = item.TransferId
                 });
-        } 
+        }
 
         [Route("Withdraw")]
         [HttpPost]
         public IHttpActionResult GetWithdraw([FromBody] decimal amount)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+                return BadRequest();
 
             var result = _service.Withdraw(user.Id, amount);
 
@@ -135,6 +164,8 @@ namespace BankingApp.Web.Controllers
         public IHttpActionResult Transfer([FromBody]TransferViewModel model)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+                return BadRequest();
 
             var result = _service.Transfer(user.Id, model.DestanationId, model.Amount);
 

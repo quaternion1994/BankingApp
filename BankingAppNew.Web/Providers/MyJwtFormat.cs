@@ -34,8 +34,8 @@ namespace BankingAppNew.Web.Providers
         {
             if (data == null) throw new ArgumentNullException("data");
 
-            var issuer = "localhost";
-            var audience = "all";
+            var issuer = WebConfigurationManager.AppSettings["Domain"];
+            var audience = WebConfigurationManager.AppSettings["ClientId"];
             var key = TextEncodings.Base64Url.Decode(WebConfigurationManager.AppSettings["ClientSecret"]);
             var now = DateTime.UtcNow;
             var expires = now.AddMinutes(TimeSpan.FromDays(1).TotalMinutes);

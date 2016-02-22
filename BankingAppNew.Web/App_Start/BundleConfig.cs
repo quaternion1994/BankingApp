@@ -20,7 +20,8 @@ namespace BankingAppNew.Web
                 "~/Scripts/angular-route.min.js",
                 "~/Scripts/JsApp/BankingApp.js",
                 "~/Scripts/JsApp/BankingAppCtrl.js",
-                "~/Scripts/JsApp/LoginCtrl.js"));
+                "~/Scripts/JsApp/LoginCtrl.js",
+                "~/Scripts/JsApp/RegCtrl.js"));
 
       bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/bootstrap.js",

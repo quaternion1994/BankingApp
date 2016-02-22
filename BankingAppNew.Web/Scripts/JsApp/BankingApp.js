@@ -11,6 +11,10 @@ app.config(['$routeProvider',
             templateUrl: 'Home/Login',
             controller: 'LoginCtrl'
         }).
+        when('/registration', {
+            templateUrl: 'Home/Registration',
+            controller: 'RegCtrl'
+        }).
         otherwise({
             redirectTo: '/login'
         });

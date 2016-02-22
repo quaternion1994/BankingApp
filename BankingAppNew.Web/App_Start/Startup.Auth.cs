@@ -9,7 +9,6 @@ using Microsoft.Owin.Security.DataHandler.Encoder;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode;
 
 namespace BankingAppNew.Web
 {
@@ -17,16 +16,12 @@ namespace BankingAppNew.Web
     {
         static Startup()
         {
-            PublicClientId = "self";
-
             UserManagerFactory = () => new BankUserManager(new UserStore<BankAccount>(new BankDbContext()));
         }
 
         public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
 
         public static Func<BankUserManager> UserManagerFactory { get; set; }
-
-        public static string PublicClientId { get; private set; }
 
         public void ConfigureAuth(IAppBuilder app)
         {

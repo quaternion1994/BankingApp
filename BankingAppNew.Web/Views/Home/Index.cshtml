@@ -1,30 +1,33 @@
-﻿@if (Request.IsAuthenticated)
-{
-    <div ng-app="BankingApp">
+﻿    <div ng-app="BankingApp" ng-show="authenticated">
         <div ng-controller="BankingAppCtrl">
             <div class="row">
                 <div class="col-md-4">
-                    <h3>@User.Identity.Name</h3>
-                    <span>Баланс: </span><span style="font-weight: bold">{{balance}}$</span>
-                    <ul>
-                        <li ng-repeat="item in accountlist">{{item.UserName}} [{{item.Id}}]</li>
-                    </ul>
+                    <h3>{{userinfo.Username}} [{{userinfo.Id}}]</h3>
+                    <span>Balance: </span><span style="font-weight: bold">{{balance}}$</span>
+                    <hr>
+                    <button ng-click="logout()">Leave</button>
                 </div>
                 <div class="col-md-4">
-                    <h3>Список транзакций</h3>
+                    <h3>Transactions list</h3>
                     <ul>
                         <li ng-repeat="item in transactions">{{item.TransferId}} [{{item.amount}}]</li>
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h3>Операции</h3>
-
+                    <h3>Operations</h3>
+                    <span>Withdrawin</span>
+                    <input ng-model="withdrawAmount" type="number" value="10" placeholder="Amount"><br>
+                    <button ng-click="withdraw()">Withdraw</button>
+                    <br>
+                    <span>Refilling</span>
+                    <input ng-model="refillAmount" type="number" value="10" placeholder="Amount"><br>
+                    <button ng-click="refill()">Refill</button>
+                    <br>
+                    <span>Transfer</span>
+                    <input ng-model="transferAmount" type="number" value="10" placeholder="Amount"><br>
+                    <input ng-model="anotherClientId" type="number" placeholder="Client ID"><br>
+                    <button ng-click="transfer()">Transfer</button>
                 </div>
             </div>
         </div>
     </div>
-}
-else
-{
-    <a href="#/login">Войти</a>
-}

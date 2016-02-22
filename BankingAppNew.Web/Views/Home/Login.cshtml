@@ -1,7 +1,13 @@
 ﻿
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Entering";
 }
+<h2>Log in the system</h2>
+<input ng-model="username" type="text" placeholder="Username" /><hr>
+<input ng-model="password" type="password" placeholder="Enter pass" /><hr>
 
-
-<a href="#/bank">BANK</a>
+<hr>
+<input id="loginbutton" ng-click="login()" type="button" value="Log in"/>
+<input id="regbutton" ng-click="reg()" type="button" value="Registration" />
+<hr>
+ <span style="color: red;">{{errormessage}}</span>
