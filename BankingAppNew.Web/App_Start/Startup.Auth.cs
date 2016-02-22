@@ -9,6 +9,7 @@ using Microsoft.Owin.Security.DataHandler.Encoder;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
+using AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode;
 
 namespace BankingAppNew.Web
 {
@@ -50,6 +51,7 @@ namespace BankingAppNew.Web
 
             var oAuthServerOptions = new OAuthAuthorizationServerOptions()
             {
+                    AuthenticationMode = AuthenticationMode.Passive,
                     TokenEndpointPath = new PathString("/token"),
                     AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
                     AccessTokenFormat = new MyJwtFormat(),

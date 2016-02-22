@@ -10,22 +10,22 @@
                 <div class="col-md-4">
                     <h3>Transactions list</h3>
                     <ul>
-                        <li ng-repeat="item in transactions">{{item.TransferId}} [{{item.amount}}]</li>
+                        <li ng-repeat="item in transactions">{{item.TransferId}} [{{item.Amount}}$]</li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h3>Operations</h3>
-                    <span>Withdrawin</span>
+                    <span>Withdrawin</span><br>
                     <input ng-model="withdrawAmount" type="number" value="10" placeholder="Amount"><br>
                     <button ng-click="withdraw()">Withdraw</button>
                     <br>
-                    <span>Refilling</span>
+                    <span>Refilling</span><br>
                     <input ng-model="refillAmount" type="number" value="10" placeholder="Amount"><br>
                     <button ng-click="refill()">Refill</button>
                     <br>
-                    <span>Transfer</span>
+                    <span>Transfer</span><br>
                     <input ng-model="transferAmount" type="number" value="10" placeholder="Amount"><br>
-                    <input ng-model="anotherClientId" type="number" placeholder="Client ID"><br>
+                    <input ng-model="anotherClientId" type="text" placeholder="Client ID"><br>
                     <button ng-click="transfer()">Transfer</button>
                 </div>
             </div>

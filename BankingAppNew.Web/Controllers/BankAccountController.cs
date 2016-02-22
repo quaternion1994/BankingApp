@@ -104,7 +104,7 @@ namespace BankingApp.Web.Controllers
             }
         }
 
-        // PUT api/BankAccount/Deposit
+        // POST api/BankAccount/Deposit
         //
         [Route("Deposit")]
         [HttpPost]
@@ -144,7 +144,7 @@ namespace BankingApp.Web.Controllers
 
         [Route("Withdraw")]
         [HttpPost]
-        public IHttpActionResult GetWithdraw([FromBody] decimal amount)
+        public IHttpActionResult Withdraw([FromBody] decimal amount)
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
             if (user == null)

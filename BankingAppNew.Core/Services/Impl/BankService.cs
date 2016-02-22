@@ -184,7 +184,7 @@ namespace BankingAppNew.Core.Services.Impl
         using (AccountUnitOfWork accountUnitOfWork = this._factory.CreateAccountUnitOfWork())
         {
             return new BankRequestResult<IEnumerable<Transfer>>(BankRequestStatus.Done,
-                accountUnitOfWork.TransferRepository.All(x => x.BankAccountId == accountid));
+                accountUnitOfWork.TransferRepository.All(x => x.BankAccountId == accountid).ToList());
         }
     }
     
